@@ -11,7 +11,7 @@ pub fn voxel_downsample(point_cloud: &[point3d::Point3d], voxel_size: f32) -> Ve
         .par_iter()
         .map(|pt| (point_to_voxel(pt, voxel_size), *pt))
         .collect();
-    return grid.values().cloned().collect();
+    grid.values().cloned().collect()
 }
 
 pub fn point_to_voxel(point: &point3d::Point3d, voxel_size: f32) -> voxel_hash_map::Voxel {

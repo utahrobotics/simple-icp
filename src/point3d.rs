@@ -1,8 +1,7 @@
 use nalgebra as na;
-use pcd_rs::PcdDeserialize;
 use rayon::prelude::*;
 
-#[derive(PcdDeserialize, Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct Point3d {
     pub x: f32,
     pub y: f32,
@@ -20,12 +19,6 @@ impl Point3d {
     pub fn to_na_point3_f64(&self) -> na::Point3<f64> {
         na::Point3::<f64>::new(self.x as f64, self.y as f64, self.z as f64)
     }
-}
-
-pub fn read_pcd_to_points(pcd_path: &str) -> Vec<Point3d> {
-    let reader = pcd_rs::Reader::open(pcd_path).unwrap();
-    let points: Result<Vec<Point3d>, _> = reader.collect();
-    points.expect("wrong format")
 }
 
 pub fn clip_point_cloud_by_distance(
