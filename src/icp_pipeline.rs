@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{
     adaptive_threshold::AdaptiveThreshold,
     config,
@@ -16,6 +18,25 @@ pub struct IcpPipeline {
 }
 
 impl IcpPipeline {
+    pub fn new_with_config(config: config::Config) -> Self {
+        IcpPipeline {
+            config: config.clone(),
+            t_origin_current: na::Isometry::identity(),
+            t_prev_current: na::Isometry::identity(),
+            voxel_map: voxel_hash_map::VoxelHashMap {
+                voxel_size: config.voxel_size,
+                max_distance: config.max_range as f64,
+                max_points_per_voxel: config.max_points_per_voxel as usize,
+                map: HashMap::new(),
+                last_batch_points: Vec::new(),
+            },
+            adaptive_threshold: AdaptiveThreshold::new(
+                config.initial_threshold,
+                config.min_motion_th,
+                config.max_range as f64,
+            ),
+        }
+    }
     pub fn default_values() -> IcpPipeline {
         let config = config::Config::default_values();
         IcpPipeline {

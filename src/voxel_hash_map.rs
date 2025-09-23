@@ -11,10 +11,10 @@ pub type Voxel = na::Vector3<i32>;
 type VoxelPoints = Vec<point3d::Point3d>;
 
 pub struct VoxelHashMap {
-    voxel_size: f32,
-    max_distance: f64,
-    max_points_per_voxel: usize,
-    map: HashMap<na::Vector3<i32>, VoxelPoints>,
+    pub voxel_size: f32,
+    pub max_distance: f64,
+    pub max_points_per_voxel: usize,
+    pub map: HashMap<na::Vector3<i32>, VoxelPoints>,
     pub last_batch_points: VoxelPoints,
 }
 
