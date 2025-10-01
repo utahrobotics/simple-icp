@@ -29,7 +29,7 @@ pub fn clip_point_cloud_by_distance(
     let min2 = min_distance * min_distance;
     let max2 = max_distance * max_distance;
     point_cloud
-        .par_iter()
+        .iter()
         .filter_map(|pt| {
             let s = pt.square();
             if s < min2 || s > max2 {

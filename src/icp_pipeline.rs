@@ -114,7 +114,7 @@ fn voxelize(
 }
 
 fn transform_points(transform: &na::Isometry3<f64>, point_cloud: &mut [point3d::Point3d]) {
-    point_cloud.par_iter_mut().for_each(|pt| {
+    point_cloud.iter_mut().for_each(|pt| {
         let transformed_pt =
             transform.transform_point(&na::Point3::new(pt.x as f64, pt.y as f64, pt.z as f64));
         pt.x = transformed_pt.x as f32;
@@ -129,7 +129,7 @@ fn point_association(
     max_correspondance_distance: f64,
 ) -> Vec<(point3d::Point3d, point3d::Point3d)> {
     points
-        .par_iter()
+        .iter()
         .filter_map(|pt| {
             if let Some((closest_neighbor, distance)) = voxel_map.get_closest_neighbor(pt) {
                 if distance < max_correspondance_distance {

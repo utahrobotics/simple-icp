@@ -76,7 +76,7 @@ impl VoxelHashMap {
         t_origin_current: &na::Isometry3<f64>,
     ) {
         let transformed_points: VoxelPoints = points
-            .par_iter()
+            .iter()
             .map(|pt| {
                 let transformed_na = t_origin_current * pt.to_na_point3_f64();
                 point3d::Point3d {
@@ -118,7 +118,7 @@ impl VoxelHashMap {
         let max_distance2 = self.max_distance * self.max_distance;
         let keys_too_far: Vec<Voxel> = self
             .map
-            .par_iter()
+            .iter()
             .filter_map(|(k, vps)| {
                 if (vps[0].to_na_vec_f64() - current_origin).norm_squared() >= max_distance2 {
                     Some(k.to_owned())
