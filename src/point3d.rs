@@ -1,5 +1,4 @@
 use nalgebra as na;
-use rayon::prelude::*;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Point3d {

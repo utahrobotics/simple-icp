@@ -7,7 +7,6 @@ use crate::{
     point3d, voxel_hash_map, voxel_util,
 };
 use nalgebra as na;
-use rayon::iter::{IntoParallelRefIterator, IntoParallelRefMutIterator, ParallelIterator};
 
 pub struct IcpPipeline {
     config: config::Config,

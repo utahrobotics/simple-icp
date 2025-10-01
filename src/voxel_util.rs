@@ -3,7 +3,6 @@ use crate::{
     voxel_hash_map::{self, Voxel},
 };
 use nalgebra as na;
-use rayon::prelude::*;
 use std::collections::HashMap;
 
 pub fn voxel_downsample(point_cloud: &[point3d::Point3d], voxel_size: f32) -> Vec<Point3d> {

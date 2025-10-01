@@ -1,5 +1,4 @@
 use nalgebra as na;
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use std::collections::HashMap;
 
 use crate::{
