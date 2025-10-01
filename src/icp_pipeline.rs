@@ -160,7 +160,7 @@ fn build_linear_system(
         };
 
     correspondences
-        .par_iter()
+        .iter()
         .map(|corr_p3d| {
             let square = |x| x * x;
             let weight = |residual2| square(kernel_scale) / square(kernel_scale + residual2);
@@ -174,10 +174,10 @@ fn build_linear_system(
             let j_tr = j_tw * residual;
             (j_tj, j_tr)
         })
-        // 2nd Lambda: Parallel reduction of the private Jacboians
-        .reduce(Default::default, |(j_tj_a, j_tr_a), (j_tj_b, j_tr_b)| {
-            (j_tj_a + j_tj_b, j_tr_a + j_tr_b)
-        })
+        .fold(
+            (na::Matrix6::<f64>::zeros(), na::Vector6::<f64>::zeros()),
+            |(j_tj_a, j_tr_a), (j_tj_b, j_tr_b)| (j_tj_a + j_tj_b, j_tr_a + j_tr_b),
+        )
 }
 
 fn align_points_to_map(
