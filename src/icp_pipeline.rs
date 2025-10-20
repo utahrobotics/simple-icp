@@ -108,7 +108,7 @@ fn voxelize(
     voxel_size: f32,
 ) -> (Vec<point3d::Point3d>, Vec<point3d::Point3d>) {
     let frame_downsample = voxel_util::voxel_downsample(point_cloud, voxel_size * 0.5);
-    let source = voxel_util::voxel_downsample(&frame_downsample, voxel_size * 1.5);
+    let source = voxel_util::voxel_downsample(&point_cloud, voxel_size * 1.5);
     (source, frame_downsample)
 }
 
@@ -206,7 +206,8 @@ fn align_points_to_map(
                 println!("i {} cor {} k {}", i, correspondences.len(), kernel_scale);
                 println!("jtj {}", jtj);
                 println!("jtr {}", jtr);
-                panic!()
+                converge_flag = false;
+                break;
             }
         };
         let estimation = dx.exp();
@@ -218,7 +219,7 @@ fn align_points_to_map(
         }
     }
     if !converge_flag {
-        println!("not converge!!!!!!!!!!!");
+        println!("Point cloud could not be aligned to map: could not converge.");
     }
     t_icp * initial_guess
 }
