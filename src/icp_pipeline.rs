@@ -203,9 +203,9 @@ fn align_points_to_map(
         let dx = match jtj.qr().solve(&(-jtr)) {
             Some(dx) => dx,
             None => {
-                println!("i {} cor {} k {}", i, correspondences.len(), kernel_scale);
-                println!("jtj {}", jtj);
-                println!("jtr {}", jtr);
+                eprintln!("i {} cor {} k {}", i, correspondences.len(), kernel_scale);
+                eprintln!("jtj {}", jtj);
+                eprintln!("jtr {}", jtr);
                 converge_flag = false;
                 break;
             }
@@ -219,7 +219,7 @@ fn align_points_to_map(
         }
     }
     if !converge_flag {
-        println!("Point cloud could not be aligned to map: could not converge.");
+        eprintln!("Point cloud could not be aligned to map: could not converge.");
     }
     t_icp * initial_guess
 }
