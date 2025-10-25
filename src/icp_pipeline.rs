@@ -6,7 +6,7 @@ use crate::{
     lie_group::{Exp, Hat},
     point3d, voxel_hash_map, voxel_util,
 };
-use nalgebra as na;
+use nalgebra::{self as na, Vector3};
 
 pub struct IcpPipeline {
     config: config::Config,
@@ -35,6 +35,9 @@ impl IcpPipeline {
                 config.max_range as f64,
             ),
         }
+    }
+    pub fn get_global_map(&self) -> Vec<Vector3<f64>> {
+        return self.voxel_map.get_na_points();
     }
     pub fn default_values() -> IcpPipeline {
         let config = config::Config::default_values();
