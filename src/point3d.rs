@@ -39,3 +39,24 @@ pub fn clip_point_cloud_by_distance(
         })
         .collect()
 }
+
+pub fn clip_point_cloud_by_distance_and_intensity(
+    point_cloud: &[Point3d],
+    min_distance: f32,
+    max_distance: f32,
+    min_intensity: f32,
+) -> Vec<Point3d> {
+    let min2 = min_distance * min_distance;
+    let max2 = max_distance * max_distance;
+    point_cloud
+        .iter()
+        .filter_map(|pt| {
+            let s = pt.square();
+            if s < min2 || s > max2 || pt.intensity < min_intensity {
+                None
+            } else {
+                Some(*pt)
+            }
+        })
+        .collect()
+}

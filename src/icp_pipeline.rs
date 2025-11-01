@@ -56,12 +56,13 @@ impl IcpPipeline {
     pub fn get_last_batch_points(&self) -> &Vec<point3d::Point3d> {
         &self.voxel_map.last_batch_points
     }
-    pub fn process_frame(&mut self, point_cloud: &[point3d::Point3d]) {
+    pub fn process_frame(&mut self, point_cloud: &[point3d::Point3d], min_intensity: f32) {
         // clip distance
-        let cropped_frame = point3d::clip_point_cloud_by_distance(
+        let cropped_frame = point3d::clip_point_cloud_by_distance_and_intensity(
             point_cloud,
             self.config.min_range,
             self.config.max_range,
+            min_intensity,
         );
 
         // voxelize
