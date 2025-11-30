@@ -6,6 +6,8 @@ pub struct Point3d {
     pub y: f32,
     pub z: f32,
     pub intensity: f32,
+    /// seconds since the start of the frame
+    pub timestamp: f64,
 }
 
 impl Point3d {

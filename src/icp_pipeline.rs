@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::{
     adaptive_threshold::AdaptiveThreshold,
     config,
+    deskew::deskew_scan,
     lie_group::{Exp, Hat},
     point3d, voxel_hash_map, voxel_util,
 };
@@ -56,7 +57,17 @@ impl IcpPipeline {
     pub fn get_last_batch_points(&self) -> &Vec<point3d::Point3d> {
         &self.voxel_map.last_batch_points
     }
-    pub fn process_frame(&mut self, point_cloud: &[point3d::Point3d], min_intensity: f32) {
+
+    /// pose timestamps are in seconds since start of the frame
+    pub fn process_frame(
+        &mut self,
+        point_cloud: &mut [point3d::Point3d],
+        min_intensity: f32,
+        timestamped_poses: &Vec<(na::Isometry3<f64>, f64)>,
+    ) {
+        if self.config.deskew {
+            deskew_scan(point_cloud, timestamped_poses);
+        }
         // clip distance
         let cropped_frame = point3d::clip_point_cloud_by_distance_and_intensity(
             point_cloud,
@@ -74,6 +85,7 @@ impl IcpPipeline {
 
         // initial guess
         let t_origin_next_init = self.t_origin_current * self.t_prev_current;
+        deskew_scan(point_cloud, timestamped_poses);
 
         // Run ICP
         let t_origin_next = align_points_to_map(

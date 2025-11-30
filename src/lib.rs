@@ -1,5 +1,6 @@
 pub mod adaptive_threshold;
 pub mod config;
+pub mod deskew;
 pub mod icp_pipeline;
 pub mod lie_group;
 pub mod point3d;
