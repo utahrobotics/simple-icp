@@ -57,15 +57,15 @@ impl IcpPipeline {
     pub fn get_last_batch_points(&self) -> &Vec<point3d::Point3d> {
         &self.voxel_map.last_batch_points
     }
-    
+
     pub fn get_point_count_by_age(&self, max_age_seconds: f64) -> usize {
         self.voxel_map.get_point_count_by_age(max_age_seconds)
     }
-    
+
     pub fn get_oldest_point_age(&self) -> Option<f64> {
         self.voxel_map.get_oldest_point_age()
     }
-    
+
     pub fn set_point_aging(&mut self, max_age_seconds: Option<f64>) {
         self.voxel_map.max_point_age_seconds = max_age_seconds;
     }
