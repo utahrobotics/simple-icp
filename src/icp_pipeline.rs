@@ -69,7 +69,23 @@ impl IcpPipeline {
     pub fn set_point_aging(&mut self, max_age_seconds: Option<f64>) {
         self.voxel_map.max_point_age_seconds = max_age_seconds;
     }
-    pub fn process_frame(&mut self, point_cloud: &[point3d::Point3d], min_intensity: f32) {
+
+    // point cloud is mutable for deskewing in place
+    pub fn process_frame(
+        &mut self,
+        point_cloud: &mut [point3d::Point3d],
+        min_intensity: f32,
+        poses: &[(std::time::Instant, na::Isometry3<f64>)],
+    ) {
+        // deskew
+        if self.config.deskew {
+            crate::deskew::deskew_scan(
+                point_cloud,
+                poses,
+                self.config.max_angle_between_poses,
+                self.config.max_distance_between_poses,
+            );
+        }
         // clip distance
         let cropped_frame = point3d::clip_point_cloud_by_distance_and_intensity(
             point_cloud,

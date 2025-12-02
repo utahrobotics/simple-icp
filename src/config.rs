@@ -22,6 +22,11 @@ pub struct Config {
 
     // Point aging (None = disabled, Some(seconds) = enabled)
     pub max_point_age_seconds: Option<f64>,
+
+    /// Maximum allowed distance between consecutive poses for deskewing (in meters)
+    pub max_distance_between_poses: f64,
+    /// Maximum allowed angle between consecutive poses for deskewing (in radians)
+    pub max_angle_between_poses: f64,
 }
 impl Config {
     pub fn default_values() -> Config {
@@ -45,6 +50,8 @@ impl Config {
 
             // Point aging
             max_point_age_seconds: Some(30.0), // 30 seconds default
+            max_distance_between_poses: 0.05,  // 5 centimeters
+            max_angle_between_poses: std::f64::consts::PI / 18.0, // 10 degrees
         }
     }
 }
