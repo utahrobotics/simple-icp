@@ -1,11 +1,48 @@
 use nalgebra as na;
 
+use std::time::{SystemTime, UNIX_EPOCH};
+
 #[derive(Debug, Clone, Copy)]
 pub struct Point3d {
     pub x: f32,
     pub y: f32,
     pub z: f32,
     pub intensity: f32,
+    pub timestamp: f64, // Unix timestamp in seconds
+}
+
+impl Point3d {
+    pub fn new(x: f32, y: f32, z: f32, intensity: f32) -> Self {
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs_f64();
+        Point3d {
+            x,
+            y,
+            z,
+            intensity,
+            timestamp,
+        }
+    }
+
+    pub fn new_with_timestamp(x: f32, y: f32, z: f32, intensity: f32, timestamp: f64) -> Self {
+        Point3d {
+            x,
+            y,
+            z,
+            intensity,
+            timestamp,
+        }
+    }
+
+    pub fn age_seconds(&self) -> f64 {
+        let now = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs_f64();
+        now - self.timestamp
+    }
 }
 
 impl Point3d {

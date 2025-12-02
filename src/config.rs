@@ -19,6 +19,9 @@ pub struct Config {
 
     // Motion compensation
     pub deskew: bool,
+
+    // Point aging (None = disabled, Some(seconds) = enabled)
+    pub max_point_age_seconds: Option<f64>,
 }
 impl Config {
     pub fn default_values() -> Config {
@@ -39,6 +42,9 @@ impl Config {
 
             // Motion compensation
             deskew: false,
+
+            // Point aging
+            max_point_age_seconds: Some(30.0), // 30 seconds default
         }
     }
 }

@@ -28,6 +28,7 @@ impl IcpPipeline {
                 max_points_per_voxel: config.max_points_per_voxel as usize,
                 map: HashMap::new(),
                 last_batch_points: Vec::new(),
+                max_point_age_seconds: config.max_point_age_seconds,
             },
             adaptive_threshold: AdaptiveThreshold::new(
                 config.initial_threshold,
@@ -55,6 +56,18 @@ impl IcpPipeline {
     }
     pub fn get_last_batch_points(&self) -> &Vec<point3d::Point3d> {
         &self.voxel_map.last_batch_points
+    }
+    
+    pub fn get_point_count_by_age(&self, max_age_seconds: f64) -> usize {
+        self.voxel_map.get_point_count_by_age(max_age_seconds)
+    }
+    
+    pub fn get_oldest_point_age(&self) -> Option<f64> {
+        self.voxel_map.get_oldest_point_age()
+    }
+    
+    pub fn set_point_aging(&mut self, max_age_seconds: Option<f64>) {
+        self.voxel_map.max_point_age_seconds = max_age_seconds;
     }
     pub fn process_frame(&mut self, point_cloud: &[point3d::Point3d], min_intensity: f32) {
         // clip distance

@@ -15,6 +15,7 @@ pub struct VoxelHashMap {
     pub max_points_per_voxel: usize,
     pub map: HashMap<na::Vector3<i32>, VoxelPoints>,
     pub last_batch_points: VoxelPoints,
+    pub max_point_age_seconds: Option<f64>,
 }
 
 fn get_adjacent_voxels(voxel: &Voxel, adjacent_voxels: i32) -> Vec<Voxel> {
@@ -37,6 +38,7 @@ impl VoxelHashMap {
             max_points_per_voxel: 20,
             map: HashMap::new(),
             last_batch_points: Vec::new(),
+            max_point_age_seconds: Some(30.0),
         }
     }
 
@@ -52,6 +54,9 @@ impl VoxelHashMap {
     fn update(&mut self, points: &VoxelPoints, current_origin: &na::Vector3<f64>) {
         self.add_points(points);
         self.remove_points_too_far(current_origin);
+        if self.max_point_age_seconds.is_some() {
+            self.remove_aged_points();
+        }
     }
 
     pub fn get_na_points(&self) -> Vec<na::Vector3<f64>> {
@@ -83,6 +88,7 @@ impl VoxelHashMap {
                     y: transformed_na.y as f32,
                     z: transformed_na.z as f32,
                     intensity: pt.intensity,
+                    timestamp: pt.timestamp, // Preserve original timestamp
                 }
             })
             .collect();
@@ -129,6 +135,40 @@ impl VoxelHashMap {
         keys_too_far.iter().for_each(|k| {
             self.map.remove(k);
         });
+    }
+
+    fn remove_aged_points(&mut self) {
+        if let Some(max_age) = self.max_point_age_seconds {
+            let mut empty_voxels = Vec::new();
+
+            for (voxel_key, voxel_points) in self.map.iter_mut() {
+                voxel_points.retain(|point| point.age_seconds() <= max_age);
+
+                if voxel_points.is_empty() {
+                    empty_voxels.push(*voxel_key);
+                }
+            }
+
+            for voxel_key in empty_voxels {
+                self.map.remove(&voxel_key);
+            }
+        }
+    }
+
+    pub fn get_point_count_by_age(&self, max_age_seconds: f64) -> usize {
+        self.map
+            .values()
+            .flat_map(|points| points.iter())
+            .filter(|point| point.age_seconds() <= max_age_seconds)
+            .count()
+    }
+
+    pub fn get_oldest_point_age(&self) -> Option<f64> {
+        self.map
+            .values()
+            .flat_map(|points| points.iter())
+            .map(|point| point.age_seconds())
+            .max_by(|a, b| a.partial_cmp(b).unwrap())
     }
 
     pub fn get_closest_neighbor(
