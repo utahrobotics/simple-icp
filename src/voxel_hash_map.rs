@@ -88,7 +88,7 @@ impl VoxelHashMap {
                     y: transformed_na.y as f32,
                     z: transformed_na.z as f32,
                     intensity: pt.intensity,
-                    timestamp: pt.timestamp, // Preserve original timestamp
+                    global_timestamp: pt.global_timestamp, // Preserve original timestamp
                 }
             })
             .collect();
